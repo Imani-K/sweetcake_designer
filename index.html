@@ -2,90 +2,53 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>SweetCake Designer</title>
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap">
   <style>
-    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Poppins', sans-serif; }
-    body { background: #fff5f8; color: #333; line-height: 1.6; }
-    header { background: #ff69b4; color: white; padding: 20px; text-align: center; }
-    .container { width: 90%; max-width: 1000px; margin: 30px auto; }
-    h2 { margin-bottom: 20px; }
-
-    .designer-section, .ai-section { background: white; padding: 20px; border-radius: 10px; margin-bottom: 30px; box-shadow: 0 4px 8px rgba(0,0,0,0.05); }
-    label { display: block; margin-top: 15px; }
-    select, button, input[type="text"] { padding: 10px; width: 100%; margin-top: 5px; border-radius: 5px; border: 1px solid #ccc; }
-    .preview { margin-top: 20px; text-align: center; }
-    .preview img { width: 200px; height: 200px; object-fit: cover; border-radius: 10px; }
-
-    .ai-chat { border: 1px solid #ccc; border-radius: 10px; padding: 15px; max-height: 300px; overflow-y: auto; background: #fefefe; margin-top: 20px; }
-    .ai-msg { background: #f0f0f0; padding: 10px; border-radius: 8px; margin-bottom: 10px; }
+    body { font-family: sans-serif; background: #fff5f8; padding: 20px; }
+    .container { max-width: 600px; margin: auto; background: white; padding: 20px; border-radius: 10px; }
+    label, select, input, button { display: block; width: 100%; margin-bottom: 15px; }
+    .ai-chat { background: #f0f0f0; padding: 10px; border-radius: 5px; max-height: 200px; overflow-y: auto; }
+    .ai-msg { background: #eee; padding: 8px; border-radius: 5px; margin-bottom: 5px; }
     .user-msg { background: #d1e7dd; text-align: right; }
-    footer { text-align: center; padding: 20px; background: #eee; color: #666; }
   </style>
 </head>
 <body>
-  <header>
-    <h1>🎂 SweetCake Designer</h1>
-    <p>Create your dream cake + get AI suggestions</p>
-  </header>
-
   <div class="container">
-    <section class="designer-section">
-      <h2>🛠 Customize Your Cake</h2>
-      <label for="shape">Choose Cake Shape:</label>
-      <select id="shape">
-        <option>Round</option>
-        <option>Square</option>
-        <option>Heart</option>
-      </select>
+    <h2>Customize Your Cake</h2>
+    <label>Shape:</label>
+    <select id="shape">
+      <option>Round</option>
+      <option>Square</option>
+    </select>
 
-      <label for="flavor">Select Flavor:</label>
-      <select id="flavor">
-        <option>Vanilla</option>
-        <option>Chocolate</option>
-        <option>Red Velvet</option>
-        <option>Strawberry</option>
-      </select>
+    <label>Flavor:</label>
+    <select id="flavor">
+      <option>Vanilla</option>
+      <option>Chocolate</option>
+    </select>
 
-      <label for="toppings">Add Toppings:</label>
-      <select id="toppings" multiple>
-        <option>Sprinkles</option>
-        <option>Fruits</option>
-        <option>Chocolate Chips</option>
-        <option>Caramel Drizzle</option>
-        <option>Whipped Cream</option>
-      </select>
+    <label>Toppings:</label>
+    <select id="toppings" multiple>
+      <option>Sprinkles</option>
+      <option>Fruits</option>
+    </select>
 
-      <div class="preview">
-        <h3>Preview</h3>
-        <img id="cakeImage" src="https://via.placeholder.com/200x200.png?text=Your+Cake" alt="Cake Preview" />
-      </div>
+    <button onclick="placeOrder()">Place My Cake Order</button>
 
-      <button onclick="placeOrder()">Place My Cake Order</button>
-    </section>
+    <h2>Ask AI for Cake Ideas</h2>
+    <input type="text" id="userInput" placeholder="Ask something..." />
+    <button onclick="sendMessage()">Ask AI</button>
 
-    <section class="ai-section">
-      <h2>🤖 AI Cake Assistant</h2>
-      <input type="text" id="userInput" placeholder="e.g., Show me trending birthday cakes...">
-      <button onclick="sendMessage()">Ask AI</button>
-
-      <div class="ai-chat" id="chatBox">
-        <div class="ai-msg">Hi! I'm your cake assistant 🍰. Ask me anything about cake trends!</div>
-      </div>
-    </section>
+    <div class="ai-chat" id="chatBox">
+      <div class="ai-msg">Hi! I'm your cake assistant 🍰</div>
+    </div>
   </div>
-
-  <footer>
-    <p>&copy; 2025 SweetCake Designer. Designed with love 🎂</p>
-  </footer>
 
   <script>
     function placeOrder() {
       const shape = document.getElementById('shape').value;
       const flavor = document.getElementById('flavor').value;
       const toppings = Array.from(document.getElementById('toppings').selectedOptions).map(opt => opt.value).join(', ');
-
       alert(`Cake Order\nShape: ${shape}\nFlavor: ${flavor}\nToppings: ${toppings}`);
     }
 
@@ -100,7 +63,6 @@
       userMsg.innerText = userText;
       chat.appendChild(userMsg);
 
-      
       setTimeout(() => {
         const aiMsg = document.createElement('div');
         aiMsg.className = 'ai-msg';
@@ -114,13 +76,14 @@
 
     function getAIResponse(userText) {
       const ideas = [
-        "Drip cakes are trending! Try a chocolate base with caramel drip.",
-        "Minimalist white cakes with gold accents are a 2025 wedding trend.",
-        "Cartoon-themed cakes are hot for kids' birthdays.",
-        "Strawberry cream with floral toppings is popular on Instagram."
+        "Drip cakes are trending! Try chocolate with caramel.",
+        "Minimalist cakes with gold leaf are hot.",
+        "Unicorn and cartoon cakes are popular for birthdays!",
+        "Strawberry cream with floral toppings is trending."
       ];
       return ideas[Math.floor(Math.random() * ideas.length)];
     }
   </script>
 </body>
 </html>
+
