@@ -2,32 +2,106 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>SweetCake Designer</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SweetCake Designer 🍰</title>
   <style>
-    body { font-family: sans-serif; background: #fff5f8; padding: 20px; }
-    .container { max-width: 600px; margin: auto; background: white; padding: 20px; border-radius: 10px; }
-    label, select, input, button { display: block; width: 100%; margin-bottom: 15px; }
-    .ai-chat { background: #f0f0f0; padding: 10px; border-radius: 5px; max-height: 200px; overflow-y: auto; }
-    .ai-msg { background: #eee; padding: 8px; border-radius: 5px; margin-bottom: 5px; }
-    .user-msg { background: #d1e7dd; text-align: right; }
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: linear-gradient(to right, #ffe0ec, #fff);
+      margin: 0;
+      padding: 20px;
+    }
+    .container {
+      max-width: 700px;
+      margin: auto;
+      background: white;
+      padding: 25px;
+      border-radius: 15px;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    }
+    h2, h3 {
+      color: #d63384;
+      text-align: center;
+    }
+    label {
+      font-weight: bold;
+      margin-top: 10px;
+    }
+    select, input, button {
+      display: block;
+      width: 100%;
+      padding: 10px;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+      margin-bottom: 15px;
+      font-size: 16px;
+    }
+    button {
+      background-color: #ff4da6;
+      color: white;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+    button:hover {
+      background-color: #e03b92;
+    }
+    .ai-chat {
+      background: #f9f9f9;
+      padding: 15px;
+      border-radius: 10px;
+      max-height: 200px;
+      overflow-y: auto;
+      margin-bottom: 15px;
+      border: 1px solid #ddd;
+    }
+    .ai-msg {
+      background: #eee;
+      padding: 10px;
+      border-radius: 5px;
+      margin-bottom: 5px;
+    }
+    .user-msg {
+      background: #d1e7dd;
+      text-align: right;
+    }
+    .cake-preview {
+      text-align: center;
+      margin-top: 20px;
+    }
+    .cake-preview img {
+      max-width: 100%;
+      max-height: 200px;
+      border-radius: 10px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+    }
+    #orderList li {
+      margin-bottom: 8px;
+      background: #ffeaf4;
+      padding: 8px;
+      border-radius: 6px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    }
+    #orderList {
+      padding-left: 20px;
+    }
   </style>
 </head>
 <body>
   <div class="container">
-    <h2>Customize Your Cake</h2>
-    <label>Shape:</label>
+    <h2>🎂 Customize Your Cake</h2>
+    <label for="shape">Shape:</label>
     <select id="shape">
       <option>Round</option>
       <option>Square</option>
     </select>
 
-    <label>Flavor:</label>
+    <label for="flavor">Flavor:</label>
     <select id="flavor">
       <option>Vanilla</option>
       <option>Chocolate</option>
     </select>
 
-    <label>Toppings:</label>
+    <label for="toppings">Toppings:</label>
     <select id="toppings" multiple>
       <option>Sprinkles</option>
       <option>Fruits</option>
@@ -35,12 +109,22 @@
 
     <button onclick="placeOrder()">Place My Cake Order</button>
 
-    <h2>Ask AI for Cake Ideas</h2>
+    <h2>🤖 Ask AI for Cake Ideas</h2>
     <input type="text" id="userInput" placeholder="Ask something..." />
     <button onclick="sendMessage()">Ask AI</button>
 
     <div class="ai-chat" id="chatBox">
       <div class="ai-msg">Hi! I'm your cake assistant 🍰</div>
+    </div>
+
+    <div class="cake-preview" id="cakePreview" style="display: none;">
+      <h3>🎨 Cake Preview</h3>
+      <img id="cakeImage" src="" alt="Cake Image" />
+    </div>
+
+    <div id="orderHistory" style="margin-top: 30px;">
+      <h3>📝 Your Orders</h3>
+      <ul id="orderList"></ul>
     </div>
   </div>
 
@@ -48,42 +132,69 @@
     function placeOrder() {
       const shape = document.getElementById('shape').value;
       const flavor = document.getElementById('flavor').value;
-      const toppings = Array.from(document.getElementById('toppings').selectedOptions).map(opt => opt.value).join(', ');
-      alert(`Cake Order\nShape: ${shape}\nFlavor: ${flavor}\nToppings: ${toppings}`);
+      const toppings = Array.from(document.getElementById('toppings').selectedOptions).map(opt => opt.value);
+      const toppingList = toppings.length ? toppings.join(', ') : 'None';
+
+      alert(`🎂 Cake Order\nShape: ${shape}\nFlavor: ${flavor}\nToppings: ${toppingList}`);
+
+      const orderList = document.getElementById('orderList');
+      const li = document.createElement('li');
+      li.textContent = `🧁 ${shape} | ${flavor} | Toppings: ${toppingList}`;
+      orderList.appendChild(li);
     }
 
-    function sendMessage() {
+    async function sendMessage() {
       const input = document.getElementById('userInput');
       const chat = document.getElementById('chatBox');
       const userText = input.value.trim();
       if (!userText) return;
+
+      chat.querySelectorAll('.ai-msg').forEach((msg, idx) => {
+        if (idx > 0) chat.removeChild(msg);
+      });
 
       const userMsg = document.createElement('div');
       userMsg.className = 'ai-msg user-msg';
       userMsg.innerText = userText;
       chat.appendChild(userMsg);
 
-      setTimeout(() => {
-        const aiMsg = document.createElement('div');
-        aiMsg.className = 'ai-msg';
-        aiMsg.innerText = getAIResponse(userText);
-        chat.appendChild(aiMsg);
-        chat.scrollTop = chat.scrollHeight;
-      }, 1000);
+      const res = await fetch('/ask-ai', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ message: userText })
+      });
+
+      const data = await res.json();
+      const aiMsg = document.createElement('div');
+      aiMsg.className = 'ai-msg';
+      aiMsg.innerText = data.reply;
+      chat.appendChild(aiMsg);
+      chat.scrollTop = chat.scrollHeight;
+      showCakeImage();
 
       input.value = '';
     }
 
-    function getAIResponse(userText) {
-      const ideas = [
-        "Drip cakes are trending! Try chocolate with caramel.",
-        "Minimalist cakes with gold leaf are hot.",
-        "Unicorn and cartoon cakes are popular for birthdays!",
-        "Strawberry cream with floral toppings is trending."
-      ];
-      return ideas[Math.floor(Math.random() * ideas.length)];
+    function showCakeImage() {
+      const shape = document.getElementById('shape').value.toLowerCase();
+      const flavor = document.getElementById('flavor').value.toLowerCase();
+      let imageUrl = '';
+
+      if (shape === 'round' && flavor === 'vanilla') {
+        imageUrl = 'https://i.imgur.com/Y4Gp9CV.png';
+      } else if (shape === 'round' && flavor === 'chocolate') {
+        imageUrl = 'https://i.imgur.com/k2jK8M7.png';
+      } else if (shape === 'square' && flavor === 'vanilla') {
+        imageUrl = 'https://i.imgur.com/wfL3k2f.png';
+      } else {
+        imageUrl = 'https://i.imgur.com/z0mRAoI.png';
+      }
+
+      const preview = document.getElementById('cakePreview');
+      const img = document.getElementById('cakeImage');
+      img.src = imageUrl;
+      preview.style.display = 'block';
     }
   </script>
 </body>
 </html>
-
